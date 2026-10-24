@@ -1,0 +1,26 @@
+name: Link preview picture
+on:
+  push:
+    branches: [main]
+    paths: [og.html, scripts/og.mjs, .github/workflows/og.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install a headless browser
+        run: npm install --no-save --no-package-lock playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Take the picture
+        run: node scripts/og.mjs
+      - name: Save it if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add og.jpg 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Update link preview picture" && git push)
