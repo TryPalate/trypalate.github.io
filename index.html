@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Palate · Rank your top 5. Say why.</title>
+<meta name="description" content="Rank your top 5 in anything, from albums to fast food, say why, and see how your taste matches your friends'. Free, friends only.">
+<meta name="theme-color" content="#0A0A0D">
+<meta property="og:title" content="Palate · Rank your top 5. Say why.">
+<meta property="og:description" content="Rank your top 5 in anything, say why, and see how your taste matches your friends'.">
+<meta property="og:image" content="https://trypalate.github.io/palate/icons/og-image.png">
+<meta property="og:url" content="https://trypalate.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="https://trypalate.github.io/palate/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="https://trypalate.github.io/palate/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://wsrv.nl">
+<style>
+:root{
+  --bg:#0A0A0D;--card:#15151A;--raise:#22222A;--text:#F5F5F7;--muted:#8E8E98;--line:rgb(255 255 255 / .08);
+  --accent:#FFB06B;--on-accent:#1A0E04;--glowL:44%;--glowA:.55;
+  --font:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --shadow:0 30px 80px -30px rgb(0 0 0 / .7);
+  --w:1120px;--ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root{--bg:#F1F1F4;--card:#FFFFFF;--raise:#E8E8EE;--text:#111114;--muted:#5E5E67;--line:rgb(0 0 0 / .07);
+    --accent:#A84C0F;--on-accent:#FFFFFF;--glowL:72%;--glowA:.6;--shadow:0 30px 70px -34px rgb(20 20 40 / .35);color-scheme:light}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 20px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:8px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--text);color:var(--bg);padding:8px 14px;border-radius:999px;z-index:50;text-decoration:none;font-weight:600}
+.skip:focus{top:12px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;font-weight:600;font-size:16px;text-decoration:none;transition:transform .2s var(--ease),background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.quiet{background:var(--raise);color:var(--text)}
+.btn svg{width:16px;height:16px}
+
+/* Nav */
+.nav{position:fixed;inset:0 0 auto 0;z-index:20;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.solid{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:saturate(1.4) blur(16px);-webkit-backdrop-filter:saturate(1.4) blur(16px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav .logo{display:block;line-height:0;color:var(--text)}
+.nav .logo svg{height:30px;width:auto;aspect-ratio:1048/300}
+.nav .btn{min-height:40px;padding:0 18px;font-size:15px}
+
+/* Art */
+.art{position:relative;flex:none;display:grid;place-items:center;overflow:hidden;width:var(--sz,56px);height:var(--sz,56px);border-radius:10px;
+  background:linear-gradient(135deg,hsl(var(--h,30) 55% 55%),hsl(calc(var(--h,30) + 40) 55% 35%));color:#fff;font-weight:700;font-size:calc(var(--sz,56px)*.3);letter-spacing:-.02em}
+.art.round{border-radius:50%}
+.art.tall{height:calc(var(--sz,56px)*1.36)}
+.art::after{content:"";position:absolute;inset:0;background:var(--img) center/cover no-repeat;opacity:0;transition:opacity .6s var(--ease)}
+.art.on::after{opacity:1}
+.art b{opacity:.85}
+
+/* Shelf card (mirrors the app) */
+.card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);position:relative;overflow:hidden;isolation:isolate}
+.card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 80% at 100% 0%,hsl(var(--h,30) calc(var(--s,50)*1%) var(--glowL) / .30),transparent 65%);transition:background .8s}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;padding:20px 22px 6px}
+.card-head h3{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.card-head span{font-size:13px;color:var(--muted)}
+.rows{list-style:none;margin:0;padding:4px 22px 14px}
+.row{display:grid;grid-template-columns:20px auto minmax(0,1fr);gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .rk{color:var(--muted);font-weight:600;font-size:15px;text-align:center}
+.row .nm{min-width:0}
+.row .nm b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .nm small{display:block;color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .why{display:block;font-size:15px;margin-top:4px}
+.example{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* Hero */
+.hero{position:relative;padding:128px 0 72px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto -10%;height:90%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 50% at 15% 20%,#FF8A5B55,transparent 70%),radial-gradient(35% 45% at 45% 5%,#FF5C8A44,transparent 70%),radial-gradient(40% 50% at 80% 15%,#8E6CFF44,transparent 70%);filter:blur(20px)}
+@media (prefers-color-scheme:light){.hero::before{opacity:.55}}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.display{font-size:clamp(48px,7.6vw,104px);font-weight:700;letter-spacing:-.05em;line-height:.95}
+.display em{font-style:normal;color:var(--accent);display:block}
+.lede{font-size:clamp(18px,1.6vw,21px);color:var(--muted);max-width:30ch;margin-top:24px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero .card{max-width:420px;margin-left:auto;animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+
+/* Section heads */
+section{position:relative}
+.sec{padding:96px 0}
+.eyebrow{font-size:14px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.h2{font-size:clamp(34px,4.6vw,60px);font-weight:700;letter-spacing:-.04em;line-height:1.02;margin-top:10px}
+.p{color:var(--muted);font-size:18px;max-width:46ch;margin-top:18px}
+
+/* Showcase (scroll story) */
+.show{height:calc(15 * 52vh + 100vh)}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center;
+  background:radial-gradient(70% 70% at 78% 45%,hsl(var(--h) calc(var(--s)*1%) var(--glowL) / var(--glowA)),transparent 70%),radial-gradient(55% 60% at 8% 95%,hsl(calc(var(--h) + 35) calc(var(--s)*1%) var(--glowL) / calc(var(--glowA)*.6)),transparent 70%),var(--bg)}
+.stage .wrap{width:100%;display:grid;grid-template-columns:1fr 440px;gap:48px;align-items:center}
+.chap-txt{position:relative;min-height:260px}
+.chap-txt .t{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0}
+.chap-txt .t h2{font-size:clamp(56px,9vw,128px);font-weight:700;letter-spacing:-.055em;line-height:.9}
+.chap-txt .t p{color:var(--muted);font-size:clamp(18px,1.8vw,22px);margin-top:16px;max-width:24ch}
+.dots{display:flex;gap:8px;margin-top:8px}
+.dots i{width:28px;height:4px;border-radius:2px;background:var(--line);overflow:hidden;position:relative}
+.dots i::after{content:"";position:absolute;inset:0;background:var(--text);transform-origin:left;transform:scaleX(var(--p,0))}
+.decks{position:relative;height:520px}
+.decks .card{position:absolute;inset:0 0 auto 0;opacity:0;will-change:transform,opacity}
+.decks .row{transition:opacity .35s,transform .35s var(--ease)}
+.decks .row.dim{opacity:.38}
+.decks .row.act{transform:translateX(4px)}
+.decks .row .why{max-height:0;opacity:0;overflow:hidden;transition:max-height .4s var(--ease),opacity .3s}
+.decks .row.act .why{max-height:48px;opacity:1}
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--muted)}
+
+/* How it works */
+.how .wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.steps{list-style:none;margin:40px 0 0;padding:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:56px 1fr;gap:16px;padding:22px 0;border-top:1px solid var(--line)}
+.steps li::before{counter-increment:s;content:counter(s);font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--accent)}
+.steps b{display:block;font-size:20px;letter-spacing:-.01em}
+.steps span{color:var(--muted)}
+.editor{padding:22px}
+.editor .q{display:flex;align-items:center;gap:10px;background:var(--raise);border-radius:14px;padding:12px 14px;color:var(--muted);font-size:15px}
+.editor .q svg{width:16px;height:16px;flex:none}
+.editor .pick{display:flex;align-items:center;gap:14px;margin-top:18px}
+.editor .pick b{display:block}.editor .pick small{color:var(--muted)}
+.editor label{display:block;font-size:13px;color:var(--muted);margin:18px 0 6px}
+.editor .why-box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-height:50px;font-size:16px}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--accent);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* Compare */
+.cmp .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
+.cmp .card{padding:22px}
+.pair{display:flex;align-items:center;gap:14px}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff}
+.av+.av{margin-left:-18px;box-shadow:0 0 0 3px var(--card)}
+.pair h3{font-size:20px;letter-spacing:-.02em}
+.pair p{color:var(--muted);font-size:14px}
+.pct{margin-left:auto;font-size:40px;font-weight:700;letter-spacing:-.04em;color:var(--accent)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+.cols h4{margin:0 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.mini{list-style:none;margin:0;padding:0}
+.mini li{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px;font-weight:600;min-width:0}
+.mini li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini li.off{opacity:.35}
+.mini li i{font-style:normal;color:var(--muted);width:12px;font-weight:500}
+
+/* Share */
+.share .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.story{width:min(320px,80vw);aspect-ratio:9/16;margin:0 auto;border-radius:32px;padding:30px 24px;display:flex;flex-direction:column;color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden;isolation:isolate;background:#0d0d12}
+.story::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(90% 60% at 80% 0%,hsl(var(--h,20) 70% 50% / .8),transparent 70%),radial-gradient(80% 60% at 0% 100%,hsl(calc(var(--h,20) + 50) 60% 45% / .6),transparent 70%)}
+.story>small{font-size:12px;opacity:.75;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.story h3{font-size:30px;letter-spacing:-.04em;line-height:1;margin:6px 0 18px}
+.story ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.story li{display:flex;align-items:center;gap:12px;font-weight:600;font-size:16px}
+.story li div{min-width:0}.story li small{display:block;font-weight:400;font-size:12.5px;opacity:.75;line-height:1.3}
+.story li em{font-style:normal;opacity:.6;width:14px}
+.story .sig{margin-top:auto;display:flex;align-items:center;justify-content:space-between;opacity:.85;font-size:12px}
+.story .sig svg{height:18px;width:auto;aspect-ratio:281/92.5;color:#fff}
+
+/* Private */
+.priv .list{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;border-top:1px solid var(--line)}
+.priv .list div{padding:28px 28px 0 0}
+.priv .list svg{width:22px;height:22px;color:var(--accent)}
+.priv .list b{display:block;font-size:20px;margin:14px 0 6px;letter-spacing:-.01em}
+.priv .list p{color:var(--muted);max-width:30ch}
+
+/* Topic wall */
+.wall{padding:120px 0 96px;overflow:hidden;perspective:1100px}
+.wall .head{position:relative;z-index:2;text-align:center}
+.wall .head .p{margin:18px auto 0;text-align:center}
+.floaters{position:absolute;inset:0;z-index:0;pointer-events:none}
+.floaters .card{position:absolute;width:190px;padding:12px;opacity:.32;filter:blur(1.2px)}
+.floaters .card .fr{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden}
+.floaters .card h4{margin:0 0 4px;font-size:13px}
+.lanes{position:relative;z-index:1;margin-top:64px;transform:rotateX(22deg) rotateZ(-5deg);transform-style:preserve-3d}
+.lane{display:flex;width:max-content;gap:28px;padding:6px 0;will-change:transform}
+.lane span{font-size:clamp(40px,7vw,92px);font-weight:700;letter-spacing:-.045em;line-height:1.05;white-space:nowrap}
+.lane span.o{color:transparent;-webkit-text-stroke:1.5px color-mix(in srgb,var(--text) 45%,transparent)}
+.lane span.a{color:var(--accent)}
+.lane span.dotsep{color:var(--muted);opacity:.5}
+
+/* Final + footer */
+.final{padding:96px 0 120px;text-align:center}
+.final .h2{max-width:16ch;margin:12px auto 0}
+.final .cta{justify-content:center}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer a{text-decoration:none}footer a:hover{color:var(--text)}
+footer svg{height:22px;width:auto;aspect-ratio:281/92.5;color:var(--text)}
+.credit{width:100%;font-size:12px;opacity:.8}
+
+/* Reveal on scroll */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* Tablet */
+@media (max-width:980px){
+  .hero .wrap,.how .wrap,.cmp .wrap,.share .wrap{grid-template-columns:1fr;gap:48px}
+  .hero{padding-top:112px}
+  .hero .card{margin:0 auto}
+  .stage .wrap{grid-template-columns:1fr 380px;gap:28px}
+  .cmp .card,.how .card{max-width:520px}
+  .share .story{order:2}
+  .priv .list{grid-template-columns:1fr}
+  .priv .list div{padding:24px 0 0}
+}
+/* Phone */
+@media (max-width:680px){
+  body{font-size:16px}
+  .sec{padding:88px 0}
+  .stage{align-items:flex-start}
+  .stage .wrap{grid-template-columns:1fr;gap:10px;padding-top:76px}
+  .chap-txt{min-height:122px}
+  .chap-txt .t h2{font-size:52px}
+  .chap-txt .t p{font-size:16px;margin-top:8px}
+  .decks{height:470px}
+  .row{gap:12px;padding:8px 0}
+  .decks .art{--sz:42px!important}.decks .art.tall{--sz:34px!important}.decks .row .nm small{font-size:13px}
+  .card-head{padding:16px 18px 4px}.rows{padding:2px 18px 10px}
+  .floaters .card{width:130px;opacity:.22}.floaters .card:nth-child(n+4){display:none}.wall .head{padding-bottom:8px}
+  .wall{padding:96px 0}
+  .lanes{margin-top:40px}
+}
+@media (max-height:700px) and (max-width:680px){ .decks{height:420px} .decks .art{--sz:36px!important}.decks .art.tall{--sz:30px!important}.decks .row{padding:6px 0} .chap-txt{min-height:104px} .chap-txt .t h2{font-size:44px} }
+
+/* Reduced motion: no scroll story, everything visible */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  .show{height:auto}
+  .stage{position:relative;height:auto;padding:96px 0}
+  .stage .wrap{grid-template-columns:1fr}
+  .chap-txt{display:none}
+  .decks{height:auto;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .decks .card{position:relative;opacity:1!important;transform:none!important}
+  .decks .row.dim{opacity:1}
+  .scroll-hint{display:none}
+  .dots{display:none}
+  .lane{transform:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><radialGradient id="pl0" cx="0.5" cy="0.55" r="0.5"><stop offset="0" stop-color="#FFD166"/><stop offset="1" stop-color="#FFD166" stop-opacity="0"/></radialGradient><radialGradient id="pl1" cx="0.2" cy="0.2" r="0.7"><stop offset="0" stop-color="#FF8A5B"/><stop offset="1" stop-color="#FF8A5B" stop-opacity="0"/></radialGradient><radialGradient id="pl2" cx="0.85" cy="0.25" r="0.65"><stop offset="0" stop-color="#FF5C8A"/><stop offset="1" stop-color="#FF5C8A" stop-opacity="0"/></radialGradient><radialGradient id="pl3" cx="0.15" cy="0.9" r="0.65"><stop offset="0" stop-color="#4FC3F7"/><stop offset="1" stop-color="#4FC3F7" stop-opacity="0"/></radialGradient><radialGradient id="pl4" cx="0.9" cy="0.9" r="0.7"><stop offset="0" stop-color="#8E6CFF"/><stop offset="1" stop-color="#8E6CFF" stop-opacity="0"/></radialGradient></defs><symbol id="pl-logo" viewBox="0 0 1048 300"><rect x="0" y="0.0" width="300" height="300" rx="67.11" fill="#0A0A0D"/><rect x="70.55" y="55.50" width="158.90" height="192.00" rx="9.93" fill="#F5F5F7"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="#F7EFE6"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="url(#pl0)"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="url(#pl1)"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="url(#pl2)"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="url(#pl3)"/><rect x="87.10" y="72.05" width="125.79" height="125.79" fill="url(#pl4)"/><path transform="translate(376.43,206.51)" d="M76.284 2.3400000000000003Q64.116 2.3400000000000003 54.288000000000004 -2.8080000000000003Q48.438 -5.6160000000000005 43.992000000000004 -10.062000000000001V47.268H13.572000000000001V-113.022H44.226V-102.96000000000001Q48.672000000000004 -107.17200000000001 54.522000000000006 -110.21400000000001Q64.116 -115.36200000000001 76.284 -115.36200000000001Q91.962 -115.36200000000001 104.364 -107.64000000000001Q116.766 -99.918 123.90300000000002 -86.58000000000001Q131.04000000000002 -73.242 131.04000000000002 -56.394000000000005Q131.04000000000002 -39.78 123.90300000000002 -26.442Q116.766 -13.104000000000001 104.364 -5.382000000000001Q91.962 2.3400000000000003 76.284 2.3400000000000003ZM70.902 -25.974Q79.32600000000001 -25.974 85.87800000000001 -29.835Q92.43 -33.696000000000005 96.05700000000002 -40.599000000000004Q99.68400000000001 -47.502 99.68400000000001 -56.628Q99.68400000000001 -65.52000000000001 96.05700000000002 -72.423Q92.43 -79.32600000000001 85.87800000000001 -83.18700000000001Q79.32600000000001 -87.048 70.902 -87.048Q62.712 -87.048 56.160000000000004 -83.18700000000001Q49.608000000000004 -79.32600000000001 45.981 -72.423Q42.354 -65.52000000000001 42.354 -56.628Q42.354 -47.502 45.981 -40.599000000000004Q49.608000000000004 -33.696000000000005 56.043000000000006 -29.835Q62.478 -25.974 70.902 -25.974ZM196.092 2.3400000000000003Q180.64800000000002 2.3400000000000003 168.24600000000004 -5.382000000000001Q155.84400000000002 -13.104000000000001 148.824 -26.442Q141.804 -39.78 141.804 -56.394000000000005Q141.804 -73.242 148.824 -86.58000000000001Q155.84400000000002 -99.918 168.24600000000004 -107.64000000000001Q180.64800000000002 -115.36200000000001 196.092 -115.36200000000001Q208.26000000000002 -115.36200000000001 217.854 -110.44800000000001Q224.17200000000003 -107.17200000000001 228.85200000000003 -102.25800000000001V-113.022H259.27200000000005V0.0H228.85200000000003V-10.998000000000001Q224.17200000000003 -6.0840000000000005 217.854 -2.8080000000000003Q208.26000000000002 2.3400000000000003 196.092 2.3400000000000003ZM201.70800000000003 -25.974Q214.57800000000003 -25.974 222.53400000000002 -34.515Q230.49 -43.056000000000004 230.49 -56.628Q230.49 -65.52000000000001 226.863 -72.423Q223.23600000000002 -79.32600000000001 216.80100000000002 -83.18700000000001Q210.366 -87.048 201.70800000000003 -87.048Q193.28400000000002 -87.048 186.84900000000002 -83.18700000000001Q180.41400000000002 -79.32600000000001 176.78700000000003 -72.423Q173.16000000000003 -65.52000000000001 173.16000000000003 -56.628Q173.16000000000003 -47.502 176.78700000000003 -40.599000000000004Q180.41400000000002 -33.696000000000005 186.84900000000002 -29.835Q193.28400000000002 -25.974 201.70800000000003 -25.974ZM284.076 0.0V-169.18200000000002H314.73V0.0ZM386.802 2.3400000000000003Q371.358 2.3400000000000003 358.956 -5.382000000000001Q346.554 -13.104000000000001 339.534 -26.442Q332.514 -39.78 332.514 -56.394000000000005Q332.514 -73.242 339.534 -86.58000000000001Q346.554 -99.918 358.956 -107.64000000000001Q371.358 -115.36200000000001 386.802 -115.36200000000001Q398.97 -115.36200000000001 408.56399999999996 -110.44800000000001Q414.882 -107.17200000000001 419.562 -102.25800000000001V-113.022H449.98199999999997V0.0H419.562V-10.998000000000001Q414.882 -6.0840000000000005 408.56399999999996 -2.8080000000000003Q398.97 2.3400000000000003 386.802 2.3400000000000003ZM392.418 -25.974Q405.288 -25.974 413.244 -34.515Q421.2 -43.056000000000004 421.2 -56.628Q421.2 -65.52000000000001 417.573 -72.423Q413.946 -79.32600000000001 407.511 -83.18700000000001Q401.076 -87.048 392.418 -87.048Q383.99399999999997 -87.048 377.55899999999997 -83.18700000000001Q371.124 -79.32600000000001 367.497 -72.423Q363.87 -65.52000000000001 363.87 -56.628Q363.87 -47.502 367.497 -40.599000000000004Q371.124 -33.696000000000005 377.55899999999997 -29.835Q383.99399999999997 -25.974 392.418 -25.974ZM491.4 0.0V-86.11200000000001H464.958V-113.022H491.4V-160.056H522.054V-113.022H548.496V-86.11200000000001H522.054V0.0ZM617.526 2.3400000000000003Q599.742 2.3400000000000003 585.9359999999999 -5.265000000000001Q572.13 -12.870000000000001 564.057 -26.208Q555.9839999999999 -39.546 555.9839999999999 -56.628Q555.9839999999999 -73.476 563.823 -86.697Q571.662 -99.918 585.234 -107.757Q598.806 -115.596 615.42 -115.596Q631.8 -115.596 644.319 -108.225Q656.838 -100.854 663.9749999999999 -88.101Q671.112 -75.348 671.112 -59.202000000000005Q671.112 -56.160000000000004 670.761 -53.001000000000005Q670.41 -49.842000000000006 669.4739999999999 -45.864000000000004L586.872 -45.63Q587.808 -42.120000000000005 589.446 -39.312000000000005Q593.1899999999999 -31.590000000000003 600.444 -27.495000000000005Q607.698 -23.400000000000002 617.292 -23.400000000000002Q625.95 -23.400000000000002 632.97 -26.325000000000003Q639.99 -29.25 645.1379999999999 -35.1L663.156 -17.082Q654.966 -7.488 643.149 -2.574Q631.332 2.3400000000000003 617.526 2.3400000000000003ZM586.872 -68.562 641.6279999999999 -68.796Q640.692 -72.774 639.288 -76.05000000000001Q636.012 -82.836 630.045 -86.463Q624.078 -90.09 615.42 -90.09Q606.294 -90.09 599.508 -85.995Q592.722 -81.9 589.212 -74.646Q587.808 -71.83800000000001 586.872 -68.562Z" fill="currentColor"/></symbol><symbol id="pl-polaroid" viewBox="0 0 48 58"><rect width="48" height="58" rx="3" style="fill:var(--polaroid,#F5F5F7)"/><rect x="5" y="5" width="38" height="38" fill="#F7EFE6"/><rect x="5" y="5" width="38" height="38" fill="url(#pl0)"/><rect x="5" y="5" width="38" height="38" fill="url(#pl1)"/><rect x="5" y="5" width="38" height="38" fill="url(#pl2)"/><rect x="5" y="5" width="38" height="38" fill="url(#pl3)"/><rect x="5" y="5" width="38" height="38" fill="url(#pl4)"/></symbol><symbol id="pl-word" viewBox="0 0 281.0 92.5"><path transform="translate(-5.80,72.30)" d="M32.6 1.0Q27.400000000000002 1.0 23.200000000000003 -1.2000000000000002Q20.700000000000003 -2.4000000000000004 18.8 -4.3V20.200000000000003H5.800000000000001V-48.300000000000004H18.900000000000002V-44.0Q20.8 -45.800000000000004 23.3 -47.1Q27.400000000000002 -49.300000000000004 32.6 -49.300000000000004Q39.300000000000004 -49.300000000000004 44.60000000000001 -46.0Q49.900000000000006 -42.7 52.95 -37.0Q56.0 -31.3 56.0 -24.1Q56.0 -17.0 52.95 -11.3Q49.900000000000006 -5.6000000000000005 44.60000000000001 -2.3000000000000003Q39.300000000000004 1.0 32.6 1.0ZM30.3 -11.100000000000001Q33.9 -11.100000000000001 36.7 -12.75Q39.5 -14.4 41.05 -17.35Q42.6 -20.3 42.6 -24.200000000000003Q42.6 -28.0 41.05 -30.95Q39.5 -33.9 36.7 -35.55Q33.9 -37.2 30.3 -37.2Q26.8 -37.2 24.0 -35.55Q21.200000000000003 -33.9 19.650000000000002 -30.95Q18.1 -28.0 18.1 -24.200000000000003Q18.1 -20.3 19.650000000000002 -17.35Q21.200000000000003 -14.4 23.950000000000003 -12.75Q26.700000000000003 -11.100000000000001 30.3 -11.100000000000001ZM83.80000000000001 1.0Q77.2 1.0 71.9 -2.3000000000000003Q66.60000000000001 -5.6000000000000005 63.60000000000001 -11.3Q60.6 -17.0 60.6 -24.1Q60.6 -31.3 63.60000000000001 -37.0Q66.60000000000001 -42.7 71.9 -46.0Q77.2 -49.300000000000004 83.80000000000001 -49.300000000000004Q89.0 -49.300000000000004 93.10000000000001 -47.2Q95.80000000000001 -45.800000000000004 97.80000000000001 -43.7V-48.300000000000004H110.80000000000001V0.0H97.80000000000001V-4.7Q95.80000000000001 -2.6 93.10000000000001 -1.2000000000000002Q89.0 1.0 83.80000000000001 1.0ZM86.2 -11.100000000000001Q91.7 -11.100000000000001 95.1 -14.750000000000002Q98.5 -18.400000000000002 98.5 -24.200000000000003Q98.5 -28.0 96.95 -30.95Q95.4 -33.9 92.65 -35.55Q89.9 -37.2 86.2 -37.2Q82.60000000000001 -37.2 79.85000000000001 -35.55Q77.10000000000001 -33.9 75.55000000000001 -30.95Q74.0 -28.0 74.0 -24.200000000000003Q74.0 -20.3 75.55000000000001 -17.35Q77.10000000000001 -14.4 79.85000000000001 -12.75Q82.60000000000001 -11.100000000000001 86.2 -11.100000000000001ZM121.4 0.0V-72.3H134.5V0.0ZM165.3 1.0Q158.70000000000002 1.0 153.40000000000003 -2.3000000000000003Q148.10000000000002 -5.6000000000000005 145.10000000000002 -11.3Q142.10000000000002 -17.0 142.10000000000002 -24.1Q142.10000000000002 -31.3 145.10000000000002 -37.0Q148.10000000000002 -42.7 153.40000000000003 -46.0Q158.70000000000002 -49.300000000000004 165.3 -49.300000000000004Q170.5 -49.300000000000004 174.60000000000002 -47.2Q177.3 -45.800000000000004 179.3 -43.7V-48.300000000000004H192.3V0.0H179.3V-4.7Q177.3 -2.6 174.60000000000002 -1.2000000000000002Q170.5 1.0 165.3 1.0ZM167.70000000000002 -11.100000000000001Q173.20000000000002 -11.100000000000001 176.60000000000002 -14.750000000000002Q180.0 -18.400000000000002 180.0 -24.200000000000003Q180.0 -28.0 178.45 -30.95Q176.9 -33.9 174.15 -35.55Q171.4 -37.2 167.70000000000002 -37.2Q164.10000000000002 -37.2 161.35000000000002 -35.55Q158.60000000000002 -33.9 157.05 -30.95Q155.5 -28.0 155.5 -24.200000000000003Q155.5 -20.3 157.05 -17.35Q158.60000000000002 -14.4 161.35000000000002 -12.75Q164.10000000000002 -11.100000000000001 167.70000000000002 -11.100000000000001ZM210.00000000000003 0.0V-36.800000000000004H198.70000000000002V-48.300000000000004H210.00000000000003V-68.4H223.10000000000002V-48.300000000000004H234.40000000000003V-36.800000000000004H223.10000000000002V0.0ZM263.90000000000003 1.0Q256.3 1.0 250.40000000000003 -2.25Q244.50000000000003 -5.5 241.05 -11.200000000000001Q237.60000000000002 -16.900000000000002 237.60000000000002 -24.200000000000003Q237.60000000000002 -31.400000000000002 240.95000000000005 -37.050000000000004Q244.30000000000004 -42.7 250.10000000000002 -46.050000000000004Q255.90000000000003 -49.400000000000006 263.0 -49.400000000000006Q270.0 -49.400000000000006 275.35 -46.25Q280.70000000000005 -43.1 283.75 -37.650000000000006Q286.8 -32.2 286.8 -25.3Q286.8 -24.0 286.65 -22.65Q286.5 -21.3 286.1 -19.6L250.80000000000004 -19.5Q251.20000000000002 -18.0 251.90000000000003 -16.8Q253.50000000000003 -13.5 256.6 -11.75Q259.70000000000005 -10.0 263.8 -10.0Q267.5 -10.0 270.5 -11.25Q273.5 -12.5 275.70000000000005 -15.0L283.40000000000003 -7.300000000000001Q279.90000000000003 -3.2 274.85 -1.1Q269.8 1.0 263.90000000000003 1.0ZM250.80000000000004 -29.3 274.20000000000005 -29.400000000000002Q273.8 -31.1 273.20000000000005 -32.5Q271.8 -35.4 269.25 -36.95Q266.70000000000005 -38.5 263.0 -38.5Q259.1 -38.5 256.20000000000005 -36.75Q253.30000000000004 -35.0 251.80000000000004 -31.900000000000002Q251.20000000000002 -30.700000000000003 250.80000000000004 -29.3Z" fill="currentColor"/></symbol></svg>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Palate home"><svg viewBox="0 0 1048 300" aria-hidden="true"><use href="#pl-logo"/></svg></a>
+    <a class="btn primary" href="https://trypalate.github.io/palate/">Open Palate</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div>
+        <h1 class="display" id="hero-h">Rank your top 5. <em>Say why.</em></h1>
+        <p class="lede">Albums, fast food, countries, anything. Then see how your taste matches your friends'.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://trypalate.github.io/palate/">Make your first shelf</a>
+          <a class="btn quiet" href="#how">See how it works</a>
+        </div>
+      </div>
+      <div>
+        <article class="card" id="hero-card" aria-label="Example shelf: Maya's top 5 artists"></article>
+        <p class="example">Example shelf</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="show" id="show" aria-label="Rank anything: albums, K-pop and anime">
+    <div class="stage" id="stage" style="--h:30;--s:55">
+      <div class="wrap">
+        <div>
+          <div class="chap-txt" id="chap-txt"></div>
+          <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+        <div class="decks" id="decks"></div>
+      </div>
+      <p class="scroll-hint" id="hint" aria-hidden="true">Keep scrolling</p>
+    </div>
+  </section>
+
+  <section class="sec how" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="rv">
+        <p class="eyebrow">How it works</p>
+        <h2 class="h2" id="how-h">A minute per shelf.</h2>
+        <ol class="steps">
+          <li><div><b>Pick a topic</b><span>Artists, movies, sneakers, cities. Whatever you have opinions about.</span></div></li>
+          <li><div><b>Rank up to five</b><span>Order matters. Add a line on why each one made it.</span></div></li>
+          <li><div><b>Compare with friends</b><span>See what you share, what you don't, and who's wrong.</span></div></li>
+        </ol>
+      </div>
+      <div class="card editor rv" aria-label="Example of adding a pick with a reason">
+        <div class="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search albums</div>
+        <div class="pick"><span class="art" style="--sz:64px" data-k="al:Frank Ocean|Blonde"></span><div><b>Blonde</b><small>Frank Ocean · 2016</small></div></div>
+        <label>Why is it #1?</label>
+        <div class="why-box"><span id="typed"></span><span class="caret" aria-hidden="true"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec cmp" aria-labelledby="cmp-h">
+    <div class="wrap">
+      <div class="rv">
+        <p class="eyebrow">Taste match</p>
+        <h2 class="h2" id="cmp-h">See where you overlap.</h2>
+        <p class="p">Every friend gets a match score. Open any topic to see your picks side by side, with the ones you share lit up.</p>
+      </div>
+      <div class="card rv" id="cmp-card" aria-label="Example taste match between Maya and Jordan"></div>
+    </div>
+  </section>
+
+  <section class="sec share" aria-labelledby="share-h">
+    <div class="wrap">
+      <div class="rv">
+        <p class="eyebrow">Share</p>
+        <h2 class="h2" id="share-h">Made for your story.</h2>
+        <p class="p">One tap turns any shelf into a picture sized for Instagram stories. Keep your notes on, or keep them to yourself.</p>
+      </div>
+      <div class="story rv" id="story" aria-label="Example story picture of Maya's top 5 artists"></div>
+    </div>
+  </section>
+
+  <section class="sec priv" aria-labelledby="priv-h">
+    <div class="wrap rv">
+      <p class="eyebrow">Private by design</p>
+      <h2 class="h2" id="priv-h">Just for your friends.</h2>
+      <div class="list">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></svg><b>No feed, no followers</b><p>Only friends you add see your shelves. Nothing to chase, no likes.</p></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><b>You choose, per shelf</b><p>All friends, close friends, or only you. Change it any time.</p></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg><b>Your data is yours</b><p>Download everything you've ranked, or delete your account, whenever you want.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wall" id="wall" aria-labelledby="wall-h">
+    <div class="floaters" id="floaters" aria-hidden="true"></div>
+    <div class="wrap head rv">
+      <p class="eyebrow">Topics</p>
+      <h2 class="h2" id="wall-h">Rank anything.</h2>
+      <p class="p">Dozens of topics, from albums to dog breeds. Or make your own.</p>
+    </div>
+    <p class="vh">Topics include artists, albums, songs, movies, TV shows, anime, video games, books, fast food, restaurants, countries, cities, athletes, sneakers, cars and dogs.</p>
+    <div class="lanes" id="lanes" aria-hidden="true"></div>
+  </section>
+
+  <section class="final" aria-labelledby="final-h">
+    <div class="wrap rv">
+      <p class="eyebrow">Early alpha · Free</p>
+      <h2 class="h2" id="final-h">Palate is new. Come rank something.</h2>
+      <div class="cta"><a class="btn primary" href="https://trypalate.github.io/palate/">Make your first shelf</a></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <svg viewBox="0 0 281 92.5" role="img" aria-label="Palate"><use href="#pl-word"/></svg>
+    <nav aria-label="Footer"><a href="https://trypalate.github.io/palate/">Open the app</a><span>Privacy policy (coming soon)</span><span>© 2026 Palate</span></nav>
+    <p class="credit">Artist photos and covers are shown for illustration and belong to their owners. Pictures load from Deezer, Apple and AniList.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Data. h/s are starting colors; real ones are sampled from each picture. ---------- */
+const A=(n,sub,why,h)=>({k:'ar:'+n,kind:'artist',n,sub,why,h,s:55,shape:'round'});
+const L=(artist,n,year,why,h)=>({k:'al:'+artist+'|'+n,kind:'album',artist,n,sub:artist+' · '+year,why,h,s:55,shape:''});
+const N=(n,q,year,why,h)=>({k:'an:'+q,kind:'anime',n,q,sub:'Anime · '+year,why,h,s:55,shape:'tall'});
+const HERO=[A('Frank Ocean','R&B','Blonde changed what I want from music.',35),A('Kendrick Lamar','Hip-hop','Never misses.',0),A('SZA','R&B','Ctrl was my whole senior year.',20),A('Bruno Mars','Pop',"Impossible to be sad when he's on.",40),A('Olivia Rodrigo','Pop','GUTS, start to finish.',280)];
+const CHAPTERS=[
+  {title:'Albums',line:"The ones you'd keep forever.",items:[
+    L('Frank Ocean','Blonde',2016,'Got me through a whole winter.',90),L('Kendrick Lamar','GNX',2024,'Played it every day for a month.',0),L('SZA','SOS',2022,'No skips. Fight me.',205),L('Olivia Rodrigo','GUTS',2023,'Screamed every word in the car.',275),L('Bruno Mars','24K Magic',2016,'Instant party.',45)]},
+  {title:'K-pop',line:'Settle the bias list.',items:[
+    A('NewJeans','K-pop','Every song sounds like summer.',200),A('BLACKPINK','K-pop','The stage presence alone.',330),A('BTS','K-pop','Where it started for me.',265),A('Stray Kids','K-pop','Loud in the best way.',10),A('aespa','K-pop','The concept never stops.',230)]},
+  {title:'Anime',line:'Ranked, with receipts.',items:[
+    N("Frieren",'Sousou no Frieren',2023,'Quietly the best thing I have watched.',150),N('Jujutsu Kaisen','Jujutsu Kaisen',2020,'The fights are unreal.',260),N('Attack on Titan','Shingeki no Kyojin',2013,'That ending, though.',20),N('One Piece','One Piece',1999,'A thousand episodes, zero regrets.',210),N('Demon Slayer','Kimetsu no Yaiba',2019,'Every frame is a wallpaper.',350)]}
+];
+const ALL=[...HERO,...CHAPTERS.flatMap(c=>c.items)];
+const BY={}; for(const it of ALL) (BY[it.k] ||= []).push(it);
+
+/* ---------- Pictures: Deezer (artists), Apple (album covers), AniList (anime). Cached in the browser. ---------- */
+const CK='palate-landing-img-v1'; let cache={};
+try{ cache=JSON.parse(localStorage.getItem(CK)||'{}'); }catch(e){}
+const saveCache=()=>{ try{ localStorage.setItem(CK,JSON.stringify(cache)); }catch(e){} };
+const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+function jsonp(u){ return new Promise((res,rej)=>{ const cb='plcb'+Math.random().toString(36).slice(2), sc=document.createElement('script');
+  const done=()=>{ clearTimeout(t); delete window[cb]; sc.remove(); }, t=setTimeout(()=>{ done(); rej(new Error('timeout')); },9000);
+  window[cb]=d=>{ done(); res(d); }; sc.onerror=()=>{ done(); rej(new Error('load')); }; sc.src=u+(u.includes('?')?'&':'?')+'callback='+cb; document.head.appendChild(sc); }); }
+async function artistPic(name){
+  const j=await jsonp('https://api.deezer.com/search/artist?limit=5&output=jsonp&q='+encodeURIComponent(name));
+  const d=(j&&j.data)||[]; const hit=d.find(a=>norm(a.name)===norm(name))||d[0];
+  return hit&&hit.picture_xl?{src:hit.picture_xl}:null;
+}
+async function albumArt(artist,title){
+  try{
+    const j=await jsonp('https://itunes.apple.com/search?media=music&entity=album&limit=25&term='+encodeURIComponent(artist+' '+title));
+    const r=((j&&j.results)||[]).filter(x=>norm(x.artistName).includes(norm(artist)));
+    const hit=r.find(x=>norm(x.collectionName)===norm(title))||r.find(x=>norm(x.collectionName).startsWith(norm(title)));
+    if(hit&&hit.artworkUrl100) return {src:hit.artworkUrl100.replace(/\/\d+x\d+bb\./,'/600x600bb.')};
+  }catch(e){}
+  const j=await jsonp('https://api.deezer.com/search/album?limit=10&output=jsonp&q='+encodeURIComponent(artist+' '+title));
+  const d=((j&&j.data)||[]).filter(x=>norm(x.artist&&x.artist.name)===norm(artist));
+  const hit=d.find(x=>norm(x.title)===norm(title))||d[0];
+  return hit&&hit.cover_xl?{src:hit.cover_xl}:null;
+}
+async function animeArt(q){
+  const r=await fetch('https://graphql.anilist.co',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+    body:JSON.stringify({query:'query($s:String){Media(search:$s,type:ANIME){coverImage{extraLarge color}}}',variables:{s:q}})});
+  const j=await r.json(); const c=j&&j.data&&j.data.Media&&j.data.Media.coverImage;
+  if(!c) return null; const out={src:c.extraLarge};
+  if(c.color){ const [h,s]=hexHsl(c.color); out.h=h; out.s=Math.max(30,Math.min(80,s)); }
+  return out;
+}
+function rgbHsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h=0,s=0; const l=(mx+mn)/2;
+  if(mx!==mn){ const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?((g-b)/d+(g<b?6:0)):mx===g?((b-r)/d+2):((r-g)/d+4); h*=60; } return [h,s,l]; }
+function hexHsl(x){ const n=parseInt(x.slice(1),16); const [h,s]=rgbHsl(n>>16&255,n>>8&255,n&255); return [Math.round(h),Math.round(s*100)]; }
+function sample(src){ return new Promise(res=>{ const im=new Image(); im.crossOrigin='anonymous';
+  im.onload=()=>{ try{ const c=document.createElement('canvas'); c.width=c.height=24; const x=c.getContext('2d'); x.drawImage(im,0,0,24,24);
+      const d=x.getImageData(0,0,24,24).data; let X=0,Y=0,W=0,S=0;
+      for(let i=0;i<d.length;i+=4){ const [h,s,l]=rgbHsl(d[i],d[i+1],d[i+2]); const w=s*(1-Math.abs(l-.5)*2)+.01; X+=Math.cos(h*Math.PI/180)*w; Y+=Math.sin(h*Math.PI/180)*w; S+=s*w; W+=w; }
+      let h=Math.atan2(Y,X)*180/Math.PI; if(h<0) h+=360; res({h:Math.round(h),s:Math.round(Math.max(28,Math.min(80,S/W*100)))}); }catch(e){ res(null); } };
+  im.onerror=()=>res(null); im.src='https://wsrv.nl/?w=24&h=24&fit=cover&output=png&url='+encodeURIComponent(src); }); }
+
+function paint(k){
+  const c=cache[k]; if(!c||!c.src) return;
+  for(const it of BY[k]||[]){ if(c.h!=null){ it.h=c.h; it.s=c.s; } }
+  $$('.art[data-k="'+CSS.escape(k)+'"]').forEach(el=>{ el.style.setProperty('--img','url("'+c.src.replace(/"/g,'%22')+'")'); if(c.h!=null) el.style.setProperty('--h',c.h);
+    const pre=new Image(); pre.onload=()=>el.classList.add('on'); pre.src=c.src; });
+  if(c.h!=null){ if(HERO[0].k===k) setTint($('#hero-card'),c); if(k===HERO[0].k) setTint($('#story'),c); if(k===CHAPTERS[0].items[0].k) setTint($('#cmp-card'),c);
+    CHAPTERS.forEach((ch,j)=>{ if(ch.items[0].k===k) setTint($$('.decks .card')[j],c); }); }
+}
+const setTint=(el,c)=>{ if(el){ el.style.setProperty('--h',c.h); el.style.setProperty('--s',c.s); } };
+async function load(it){
+  const k=it.k;
+  if(cache[k]&&cache[k].src&&cache[k].h!=null&&Date.now()-(cache[k].t||0)<7*864e5){ paint(k); return; }
+  try{
+    const r=it.kind==='artist'?await artistPic(it.n):it.kind==='album'?await albumArt(it.artist,it.n):await animeArt(it.q);
+    if(!r) return; cache[k]={...r,t:Date.now()}; paint(k);
+    if(r.h==null){ const col=await sample(r.src); if(col){ cache[k].h=col.h; cache[k].s=col.s; paint(k); } }
+    saveCache();
+  }catch(e){ /* keep the colored placeholder */ }
+}
+
+/* ---------- Building blocks ---------- */
+const initials=n=>n.replace(/[^A-Za-z0-9 ]/g,'').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const art=(it,sz)=>`<span class="art ${it.shape}" style="--sz:${sz}px;--h:${it.h}" data-k="${esc(it.k)}" role="img" aria-label="${esc(it.n)}"><b>${esc(initials(it.n))}</b></span>`;
+const row=(it,i,sz,withWhy)=>`<li class="row"><span class="rk">${i+1}</span>${art(it,sz)}<span class="nm"><b>${esc(it.n)}</b><small>${esc(it.sub)}</small>${withWhy?`<span class="why">${esc(it.why)}</span>`:''}</span></li>`;
+
+$('#hero-card').style.setProperty('--h',HERO[0].h);
+$('#hero-card').innerHTML=`<div class="card-head"><h3>Artists</h3><span>Maya · 2026</span></div><ol class="rows">${HERO.map((it,i)=>row(it,i,52,i<2)).join('')}</ol>`;
+
+$('#chap-txt').innerHTML=CHAPTERS.map(c=>`<div class="t"><h2>${esc(c.title)}</h2><p>${esc(c.line)}</p></div>`).join('');
+$('#decks').innerHTML=CHAPTERS.map(c=>`<article class="card" style="--h:${c.items[0].h};--s:55" aria-label="Example shelf: ${esc(c.title)}"><div class="card-head"><h3>${esc(c.title)}</h3><span>Maya · 2026</span></div><ol class="rows">${c.items.map((it,i)=>row(it,i,c.items[0].kind==='anime'?44:56,true)).join('')}</ol></article>`).join('');
+
+/* Taste match */
+const alb=CHAPTERS[0].items, jordan=[alb[0],L('Tyler, the Creator','Igor',2019,'',30),alb[2],L('Daniel Caesar','Freudian',2017,'',25),L('Steve Lacy','Gemini Rights',2022,'',15)];
+ALL.push(jordan[1],jordan[3],jordan[4]); for(const it of [jordan[1],jordan[3],jordan[4]]) (BY[it.k] ||= []).push(it);
+const shared=new Set(alb.filter(a=>jordan.some(b=>b.k===a.k)).map(a=>a.k));
+const mini=list=>`<ol class="mini">${list.map((it,i)=>`<li class="${shared.has(it.k)?'':'off'}"><i>${i+1}</i>${art(it,32)}<span>${esc(it.n)}</span></li>`).join('')}</ol>`;
+$('#cmp-card').innerHTML=`<div class="pair"><span class="av" style="background:linear-gradient(135deg,#FF8A5B,#FF5C8A)">M</span><span class="av" style="background:linear-gradient(135deg,#4FC3F7,#8E6CFF)">J</span><div><h3>You &amp; Jordan</h3><p>Albums · 2 in common</p></div><span class="pct">72%</span></div>
+  <div class="cols"><div><h4>You</h4>${mini(alb)}</div><div><h4>Jordan</h4>${mini(jordan)}</div></div>`;
+
+/* Story picture */
+$('#story').innerHTML=`<small>Palate · 2026</small><h3>Maya's top 5 artists</h3><ol>${HERO.map((it,i)=>`<li><em>${i+1}</em>${art(it,46)}<div>${esc(it.n)}<small>${esc(it.why)}</small></div></li>`).join('')}</ol><div class="sig"><svg viewBox="0 0 281 92.5" aria-hidden="true"><use href="#pl-word"/></svg><span>trypalate.github.io</span></div>`;
+
+/* Topic wall */
+const TOPICS=[['Albums','Anime','Sneakers','Cities','Fast food','Video games','Movies'],['Countries','Songs','Dogs','Books','TV shows','Restaurants','Cars'],['Athletes','Artists','Fragrances','Teams','Watches','YouTubers','Cocktails']];
+$('#lanes').innerHTML=TOPICS.map((r,ri)=>{ const words=[...r,...r,...r].map((w,i)=>`<span class="${(i+ri)%3===0?'o':(i+ri)%5===1?'a':''}">${esc(w)}</span><span class="dotsep">·</span>`).join(''); return `<div class="lane" data-dir="${ri%2?1:-1}">${words}</div>`; }).join('');
+const FL=[{t:'Albums',it:CHAPTERS[0].items},{t:'K-pop',it:CHAPTERS[1].items},{t:'Anime',it:CHAPTERS[2].items},{t:'Artists',it:HERO},{t:'Albums',it:jordan}];
+const POS=[[4,8,-6],[72,4,5],[80,58,-4],[2,62,7],[40,74,-3]];
+$('#floaters').innerHTML=FL.map((f,i)=>`<div class="card" data-d="${(i%3+1)*.18}" style="left:${POS[i][0]}%;top:${POS[i][1]}%;--r:${POS[i][2]}deg;--h:${f.it[0].h}"><h4>${esc(f.t)}</h4>${f.it.slice(0,3).map((it,j)=>`<div class="fr">${j+1} ${art(it,22)} ${esc(it.n)}</div>`).join('')}</div>`).join('');
+
+/* Load every picture once */
+const seen=new Set(); for(const it of ALL){ if(seen.has(it.k)) continue; seen.add(it.k); load(it); }
+
+/* ---------- Typing note ---------- */
+(function(){ const el=$('#typed'), msg='Got me through a whole winter.'; if(REDUCED){ el.textContent=msg; return; }
+  let i=0, started=false; const io=new IntersectionObserver(es=>{ if(es[0].isIntersecting&&!started){ started=true; const t=setInterval(()=>{ el.textContent=msg.slice(0,++i); if(i>=msg.length) clearInterval(t); },55); } },{threshold:.6}); io.observe(el); })();
+
+/* ---------- Reveal on scroll ---------- */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); rio.unobserve(e.target); } }),{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+$$('.rv').forEach(el=>rio.observe(el));
+
+/* ---------- Nav background ---------- */
+const nav=$('#nav'); const onNav=()=>nav.classList.toggle('solid',scrollY>20); addEventListener('scroll',onNav,{passive:true}); onNav();
+
+if(REDUCED) return;
+
+/* ---------- Scroll story: eased every frame so it never jumps ---------- */
+const show=$('#show'), stage=$('#stage'), cards=$$('.decks .card'), txts=$$('.chap-txt .t'), dots=$$('#dots i'), hint=$('#hint');
+const STEPS=CHAPTERS.length*5, flat=CHAPTERS.flatMap(c=>c.items);
+let cur=0, tgt=0, lastAct=-1;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerpHue=(a,b,t)=>{ const d=((b-a+540)%360)-180; return (a+d*t+360)%360; };
+function measure(){ const r=show.getBoundingClientRect(), span=show.offsetHeight-innerHeight; tgt=clamp(-r.top/span,0,1)*(STEPS-.001); }
+function frame(){
+  cur+=(tgt-cur)*.12; if(Math.abs(tgt-cur)<.0005) cur=tgt;
+  const pos=cur/5;
+  const NC=cards.length, HW=1/16;
+  cards.forEach((c,j)=>{ const inn=j===0?1:clamp(.5+(pos-j)/(2*HW),0,1), out=j===NC-1?1:clamp(.5-(pos-(j+1))/(2*HW),0,1);
+    const o=Math.min(inn,out), y=(1-inn)*90-(1-out)*90, sc=1-(1-o)*.06, to=clamp((o-.5)*2,0,1);
+    c.style.opacity=o; c.style.transform=`translateY(${y}px) scale(${sc})`; c.style.visibility=o<.01?'hidden':'visible';
+    txts[j].style.opacity=to; txts[j].style.visibility=to<.01?'hidden':'visible'; txts[j].style.transform=`translateY(${y*.6}px)`;
+    dots[j].style.setProperty('--p',clamp(pos-j,0,1).toFixed(3)); });
+  const ci=clamp(Math.floor(pos),0,CHAPTERS.length-1), act=clamp(Math.floor(cur-ci*5),0,4), key=ci*5+act;
+  if(key!==lastAct){ lastAct=key; cards.forEach((c,j)=>c.querySelectorAll('.row').forEach((r,i)=>{ r.classList.toggle('act',j===ci&&i===act); r.classList.toggle('dim',!(j===ci&&i===act)); })); }
+  const i0=clamp(Math.floor(cur),0,STEPS-1), i1=clamp(i0+1,0,STEPS-1), f=cur-i0, a=flat[i0], b=flat[i1];
+  stage.style.setProperty('--h',lerpHue(a.h,b.h,f).toFixed(1)); stage.style.setProperty('--s',(a.s+(b.s-a.s)*f).toFixed(1));
+  hint.style.opacity=clamp(1-cur*2,0,1);
+  /* Topic wall: lanes slide across, floating shelves drift at different speeds */
+  const w=wall.getBoundingClientRect(); if(w.bottom>0&&w.top<innerHeight){ const p=(innerHeight-w.top)/(innerHeight+w.height);
+    lanes.forEach((l,i)=>{ const d=+l.dataset.dir; l.style.transform=`translate3d(${(d<0?-1:1)*(p*600)-(d<0?0:600)-200*i}px,0,${i*30}px)`; });
+    floaters.forEach(fl=>{ const d=+fl.dataset.d; fl.style.transform=`translate3d(0,${(.5-p)*d*900}px,0) rotate(var(--r)) rotateY(${(p-.5)*30}deg)`; }); }
+  requestAnimationFrame(frame);
+}
+const wall=$('#wall'), lanes=$$('.lane'), floaters=$$('.floaters .card');
+addEventListener('scroll',measure,{passive:true}); addEventListener('resize',measure); measure(); cur=tgt; requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
