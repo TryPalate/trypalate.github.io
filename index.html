@@ -129,7 +129,7 @@ section{position:relative}
 .chip.auto[aria-selected="true"]::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--accent);transform-origin:left;animation:fill var(--dur,4s) linear forwards}
 @keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .deck{perspective:1000px}
-#pick-card{--h:var(--ph);--s:var(--ps);min-height:476px;transform-style:preserve-3d}
+#pick-card{--h:var(--ph);--s:var(--ps);min-height:560px;transform-style:preserve-3d}
 #pick-card .row{transform-origin:50% 0;animation:rowIn .6s var(--ease) both;animation-delay:calc(var(--i)*60ms)}
 #pick-card.out .row{animation:rowOut .22s ease-in both;animation-delay:calc(var(--i)*25ms)}
 #pick-card .card-head h3{animation:rowIn .5s var(--ease) both}
@@ -407,14 +407,14 @@ const SOPHIE=[MAYA[0],L('Charli xcx','BRAT',2024,'',80),MAYA[1],L('Steve Lacy','
 const EDIT=[
   {cat:'fast food',it:W('Chipotle','Chipotle Mexican Grill','Fast food · Mexican','Double chicken, extra guac. Every time.',10,'logo')},
   {cat:'athletes',it:W('Cristiano Ronaldo','Cristiano Ronaldo','Football · Portugal','Still scoring in his forties.',0,'round')},
-  {cat:'movies',it:M('Avengers: Endgame',2019,'That theater when the portals opened.',280,'Avengers: Endgame')},
+  {cat:'movies',it:M('Avengers: Endgame',2019,'"On your left."',280,'Avengers: Endgame')},
   {cat:'albums',it:MAYA[0]}];
 EDIT[3].it={...MAYA[0],why:'Played it all summer, no skips.'};
 const ALL=[...HERO,...CHAPTERS.flatMap(c=>c.items),...MAYA,...SOPHIE,...EDIT.map(e=>e.it)];
 const BY={}; for(const it of ALL) (BY[it.k] ||= []).push(it);
 
 /* ---------- Pictures: Deezer (artists), Apple (album covers), AniList (anime). Cached in the browser. ---------- */
-const CK='palate-landing-img-v3'; let cache={};
+const CK='palate-landing-img-v4'; let cache={};
 try{ cache=JSON.parse(localStorage.getItem(CK)||'{}'); }catch(e){}
 const saveCache=()=>{ try{ localStorage.setItem(CK,JSON.stringify(cache)); }catch(e){} };
 const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
@@ -424,9 +424,11 @@ function jsonp(u){ return new Promise((res,rej)=>{ const cb='plcb'+Math.random()
 const dzOk=u=>u&&!/\/artist\/\/|\/cover\/\//.test(u);
 async function wikiPic(title){
   const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(title.replace(/ /g,'_')));
-  const j=await r.json(); const th=j.thumbnail&&j.thumbnail.source;
-  const im=th?th.replace(/\/(\d+)px-/,'/640px-'):(j.originalimage&&j.originalimage.source);
-  return im?{src:im}:null;
+  const j=await r.json(); const th=j.thumbnail&&j.thumbnail.source, orig=j.originalimage&&j.originalimage.source;
+  /* Wikimedia only serves certain thumbnail widths, so try 500px, then the size the API gave, then the original. */
+  const tries=[th&&/\/\d+px-/.test(th)?th.replace(/\/\d+px-/,'/500px-'):null,th,orig].filter(Boolean);
+  for(const u of tries){ if(await canLoad(u)) return {src:u}; }
+  return null;
 }
 async function artistPic(name){
   try{
@@ -512,7 +514,7 @@ const art=(it,sz)=>`<span class="art ${it.shape}" style="--sz:${sz}px;--h:${it.h
 const row=(it,i,sz,withWhy)=>`<li class="row"><span class="rk">${i+1}</span>${art(it,sz)}<span class="nm"><b>${esc(it.n)}</b><small>${esc(it.sub)}</small>${withWhy?`<span class="why">${esc(it.why)}</span>`:''}</span></li>`;
 
 $('#hero-card').style.setProperty('--h',HERO[0].h);
-$('#hero-card').innerHTML=`<div class="card-head"><h3>Artists</h3><span>Maya · 2026</span></div><ol class="rows">${HERO.map((it,i)=>row(it,i,52,i<2)).join('')}</ol>`;
+$('#hero-card').innerHTML=`<div class="card-head"><h3>Artists</h3><span>Maya · 2026</span></div><ol class="rows">${HERO.map((it,i)=>row(it,i,52,true)).join('')}</ol>`;
 
 /* Topic picker */
 let curTopic=0, autoOn=!REDUCED, autoT=null; const AUTO_MS=4000;
@@ -521,7 +523,7 @@ chipsEl.innerHTML=CHAPTERS.map((c,i)=>`<button class="chip${autoOn?' auto':''}" 
 function tintPicks(){ const a=CHAPTERS[curTopic].items[0]; picksEl.style.setProperty('--ph',a.h); picksEl.style.setProperty('--ps',a.s); }
 function fillCard(i){ const c=CHAPTERS[i], sz=c.items[0].shape==='tall'?44:56;
   pickCard.setAttribute('aria-labelledby','tab-'+i);
-  pickCard.innerHTML=`<div class="card-head"><h3>${esc(c.title)}</h3><span>Maya · 2026</span></div><ol class="rows">${c.items.map((it,j)=>row(it,j,sz,j<2).replace('<li class="row"',`<li class="row" style="--i:${j}"`)).join('')}</ol>`;
+  pickCard.innerHTML=`<div class="card-head"><h3>${esc(c.title)}</h3><span>Maya · 2026</span></div><ol class="rows">${c.items.map((it,j)=>row(it,j,sz,true).replace('<li class="row"',`<li class="row" style="--i:${j}"`)).join('')}</ol>`;
   for(const it of c.items) paint(it.k); }
 function showTopic(i,fromUser){
   if(i===curTopic&&pickCard.innerHTML) return;
