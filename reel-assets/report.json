@@ -1,0 +1,79 @@
+{
+ "chipotlemexicangrill": {
+  "page": "Chipotle_Mexican_Grill",
+  "summary": "https://thumb.wikimedia.org/wikipedia/en/thumb/3/3b/Chipotle_Mexican_Grill_logo.svg/330px-Chipotle_Mexican_Grill_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "tacobell": {
+  "page": "Taco_Bell",
+  "logo": "1984TacoBellSign.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/en/thumb/b/b7/Taco_Bell_2023.svg/250px-Taco_Bell_2023.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "mcdonalds": {
+  "page": "McDonald's",
+  "logo": "McDonald's with slogan 2020.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/330px-McDonald%27s_Golden_Arches.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "innoutburger": {
+  "page": "In-N-Out_Burger",
+  "logo": "InNOut 2021 logo.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/InNOut_2021_logo.svg/250px-InNOut_2021_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "chickfila": {
+  "page": "Chick-fil-A",
+  "logo": "Chick-fil-A Logo.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Chick-fil-A_fast_food_chain_restaurant_exterior_in_Cleveland%2C_Tennessee_05.jpg/3840px-Chick-fil-A_fast_food_chain_restaurant_exterior_in_Cleveland%2C_Tennessee_05.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "shakeshack": {
+  "page": "Shake_Shack",
+  "logo": "Shake Shack logo.svg",
+  "summary": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Shake_Shack_Madison_Square.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "fiveguys": {
+  "page": "Five_Guys",
+  "logo": "Five Guys logo.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Five_Guys%2C_Merritt_Island.JPG/3840px-Five_Guys%2C_Merritt_Island.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "popeyes": {
+  "page": "Popeyes",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Popeyes_Louisiana_Kitchen_%2851195358373%29.jpg/3840px-Popeyes_Louisiana_Kitchen_%2851195358373%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "wendys": {
+  "page": "Wendy's",
+  "logo": "Wendy's logo 2012.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/en/thumb/3/32/Wendy%27s_full_logo_2012.svg/500px-Wendy%27s_full_logo_2012.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "burgerking": {
+  "page": "Burger_King",
+  "logo": "Burger King 2020.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Burger_King_2020.svg/960px-Burger_King_2020.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "kfc": {
+  "page": "KFC",
+  "logo": "Kfc textlogo.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Kentucky_Fried_Chicken_%28Tallulah%2C_Louisiana%29_01.jpg/3840px-Kentucky_Fried_Chicken_%28Tallulah%2C_Louisiana%29_01.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "starbucks": {
+  "page": "Starbucks",
+  "logo": "Starbucks coffee wordmark.png",
+  "summary": "https://thumb.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/250px-Starbucks_Corporation_Logo_2011.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "subwayrestaurant": {
+  "page": "Subway_(restaurant)",
+  "logo": "Subway 2016 logo.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/A_Subway_restaurant_in_a_strip_mall_in_Franklin%2C_North_Carolina%2C_United_States.jpg/3840px-A_Subway_restaurant_in_a_strip_mall_in_Franklin%2C_North_Carolina%2C_United_States.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "dominos": {
+  "page": "Domino's",
+  "logo": "Domino's 2025.svg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Domino%E2%80%99s_Pizza_World_Resource_Center_in_Ann_Arbor%2C_Michigan_2026.jpg/3840px-Domino%E2%80%99s_Pizza_World_Resource_Center_in_Ann_Arbor%2C_Michigan_2026.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "pandaexpress": {
+  "page": "Panda_Express",
+  "logo": "Panda Express Gourmet Chinese Food Sign.jpg",
+  "summary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Panda_Express_Storefront_%2848128044623%29.jpg/3840px-Panda_Express_Storefront_%2848128044623%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "wingstop": {
+  "page": "Wingstop",
+  "summary": "https://thumb.wikimedia.org/wikipedia/en/thumb/0/0f/Wingstop_logo.svg/960px-Wingstop_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ }
+}
