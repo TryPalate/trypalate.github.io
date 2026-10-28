@@ -2,7 +2,7 @@ name: Fetch reel assets
 on:
   push:
     branches: [assets]
-    paths: [tools/fetch_logos.py, .github/workflows/reel-assets.yml]
+    paths: [tools/fetch_logos.py, tools/fetch_people.py, .github/workflows/reel-assets.yml]
   workflow_dispatch:
 permissions:
   contents: write
@@ -12,7 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq librsvg2-bin
-      - run: python3 tools/fetch_logos.py
+      - run: pip install -q pillow
+      - run: python3 tools/fetch_people.py
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
