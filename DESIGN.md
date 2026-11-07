@@ -1,38 +1,39 @@
 # Palate landing page: design system
 
-Taken from the Palate app itself (no outside references), so the site and the app feel like one product.
+The site and the app share one look: warm paper, ink, and one soft accent. The colourful glow (the logo's five colours) appears only in the hero, the final call to action and the logo mark, so it stays special.
 
 ## Color
-| Token | Dark | Light | Role |
+| Token | Light | Dark | Role |
 |---|---|---|---|
-| `--bg` | #0A0A0D | #F1F1F4 | page background |
-| `--card` | #15151A | #FFFFFF | cards, mockups |
-| `--raise` | #22222A | #E8E8EE | chips, quiet buttons |
-| `--text` | #F5F5F7 | #111114 | text |
-| `--muted` | #8E8E98 | #5E5E67 | secondary text (4.5:1 on bg) |
-| `--line` | white 8% | black 7% | dividers |
-| `--accent` | #FFB06B | #A84C0F | the one accent: primary button, "Say why.", highlights |
+| `--bg` | #F6F3EE | #100E0C | page (warm paper / warm black) |
+| `--card` | #FFFFFF | #1B1916 | cards, mockups |
+| `--raise` | #ECE6DE | #26231F | quiet fills (search box, meters) |
+| `--text` | #1C1915 | #F3EEE7 | text and the primary button |
+| `--muted` | #6E675E | #A49C92 | secondary text |
+| `--faint` | #A59D92 | #6F685F | rank numbers, captions |
+| `--line` | ink 9% | white 8% | hairlines |
+| `--accent` | #B65A33 | #EFA27A | emphasis only: italic words in headlines, #1, step numbers, the score |
 
-Item color: sections tint their glow with `--h`/`--s`, sampled from the picture being shown (album cover, artist photo, anime poster). Logo glows (#FFD166, #FF8A5B, #FF5C8A, #4FC3F7, #8E6CFF) only appear in the mark.
+Glow colours (hero aurora, final CTA, logo): #FFD166, #FF8A5B, #FF5C8A, #4FC3F7, #8E6CFF, always heavily blurred and at 35–55% opacity. A light film grain sits over the page so the gradients never band.
 
-The page follows the system light/dark setting, like the app.
+Contrast rule: one dark ink button per screen. Everything else is a text link or a hairline.
 
 ## Typography
-System font stack (same as the app). Weights 400, 600, 700.
-Scale: 13 / 15 / 17 / 20 / 28 / 40 / clamp(44-96) display. Display: 700, letter-spacing -0.045em, line-height 0.95. Body 17px, line-height 1.5, max 60ch.
+- Display and titles: **Instrument Serif** 400 (roman + italic), self-hosted in `fonts/`. Headlines pair a roman phrase with an *italic accent phrase*.
+- Text and UI: **Geist** 400/500/600, self-hosted.
+- Scale: 12.5 (eyebrows, uppercase, +0.14em) / 15 / 17 / 19 / 30 (card titles) / clamp(42–80) section titles / clamp(54–122) hero.
+- Eyebrows: italic serif number + uppercase label + short hairline ("01 PICK A TOPIC ——").
 
 ## Spacing and shape
-4px base: 4, 8, 12, 16, 24, 32, 48, 72, 120. Content width 1120px, 20px side gutter on phones.
-Radius: 10 (art), 16 (chips/buttons are pills), 24 (cards), 32 (phone/story frames). One shadow: `0 30px 80px -30px rgb(0 0 0 / .6)`.
-
-## Components
-- Primary button: accent fill, dark text, pill. Hover lifts 1px, focus ring 2px text color.
-- Quiet button: `--raise` fill.
-- Shelf card: the app's card. Rank number, art, name, subtitle, optional "why" note.
-- Art: square for albums and anime posters (anime 3:4), circle for people.
+4px base. Sections clamp(96–168px) vertical padding. Content width 1160px, 20–24px gutters.
+Radius: 10 (art), 999 (buttons, chips), 20–22 (cards), 34 (story frame), 6 (polaroids).
+Shadows: layered and warm (`--shadow`), never grey-blue.
 
 ## Motion
-Scroll-driven, eased toward the target every frame (no jumps). Everything turns static under `prefers-reduced-motion`.
+- Hero: five polaroids fan out under the headline and bob gently; scrolling pins the stage and the polaroids fly into the rows of a shelf card, turning into round photos. Mouse parallax on desktop.
+- Headlines: each word rises out of its own line (`.split`).
+- Sections: fade + rise + un-blur on entry (`.rv`). The taste-match score counts up.
+- Everything static under `prefers-reduced-motion` (hero shows the fan, no pinning).
 
 ## Imagery
-Real artist photos and covers loaded live from Deezer, Apple and AniList, like the app. No stock photos, no emoji, no illustrations.
+Real artist photos, covers and posters loaded live (Deezer, Apple, AniList, Wikipedia), as in the app. No stock photos, no emoji, no illustrations.
