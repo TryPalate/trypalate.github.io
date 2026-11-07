@@ -301,6 +301,7 @@ footer svg{height:22px;width:auto;aspect-ratio:281/92.5;color:var(--text)}
 
 /* Tablet */
 @media (max-width:980px){
+  .display{font-size:clamp(54px,11vw,104px)}
   .how .wrap,.cmp .wrap,.share .wrap{grid-template-columns:1fr;gap:56px}
   .picks .wrap{grid-template-columns:1fr 400px;gap:36px}
   .cmp .card,.how .card{max-width:540px}
@@ -700,7 +701,7 @@ function countUp(){ const n=$('#pct-n'), m=$('#meter'), to=72; if(!n) return; m.
   let G=null, cur=0, mx=0, my=0, tmx=0, tmy=0, running=false;
   function measure(){
     const W=stage.clientWidth, H=stage.clientHeight, phone=W<680;
-    const pw=Math.round(clamp(W*(phone?.28:.11),phone?96:120,phone?124:156)), photo=pw-14, ph=photo+7+34;
+    const pw=Math.round(clamp(W*(phone?.28:W<1000?.165:.11),phone?96:120,phone?124:160)), photo=pw-14, ph=photo+7+34;
     stage.style.setProperty('--pw',pw+'px'); pols.forEach(p=>p.style.setProperty('--pw',pw+'px'));
     const copyBottom=copy.offsetTop+copy.offsetHeight, spread=phone?pw*.6:pw*.96;
     const fy=Math.max(copyBottom+(phone?28:44),Math.min(H-ph-(phone?40:70),copyBottom+(H-copyBottom-ph)/2));
